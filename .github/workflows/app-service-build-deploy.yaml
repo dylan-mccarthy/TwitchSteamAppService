@@ -48,34 +48,33 @@ jobs:
           name: tfplan
           path: ./Infra/tfplan
 
-    terraform-apply:
-      name: 'Terraform Apply'
-      runs-on: ubuntu-latest
-      defaults:
-        run:
-          working-directory: ./Infra
-      needs: [terraform-plan]
+  terraform-apply:
+    name: 'Terraform Apply'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./Infra
+    needs: [terraform-plan]
 
-      steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
 
-      - name: Terraform Init
-        run: terraform init
+    - name: Terraform Init
+      run: terraform init
 
-      - name: Download Terraform Plan
-        uses: actions/download-artifact@v3
-        with:
-          name: tfplan
-          path: ./Infra
+    - name: Download Terraform Plan
+      uses: actions/download-artifact@v3
+      with:
+        name: tfplan
+        path: ./Infra
 
-      - name: Terraform Apply
-        run: terraform apply -auto-approve tfplan
+    - name: Terraform Apply
+      run: terraform apply -auto-approve tfplan
 
-    
   
