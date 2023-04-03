@@ -12,7 +12,8 @@
 		},
 		"ghcr.io/devcontainers/features/terraform:1": {
 			"terraformVersion": "latest"
-		}
+		},
+		"ghcr.io/devcontainers/features/docker-in-docker:2":{}
 	}
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
