@@ -24,6 +24,9 @@ jobs:
     defaults:
       run:
         working-directory: ./Infra
+    env:
+      TF_VAR_docker_registry_username: ${{ secrets.DOCKER_REGISTRY_USERNAME }}
+      TF_VAR_docker_registry_password: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
     steps:
       - name: "Checkout"
         uses: actions/checkout@v3
@@ -40,7 +43,7 @@ jobs:
         run: terraform init
 
       - name: "Terraform Plan"
-        run: terraform plan -out=tfplan
+        run: terraform plan -var -out=tfplan
 
       - name: "Terraform Plan Artifact"
         uses: actions/upload-artifact@v3
