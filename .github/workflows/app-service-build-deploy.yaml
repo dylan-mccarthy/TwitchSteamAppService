@@ -6,76 +6,76 @@ on:
       - main
   workflow_dispatch:
 
-  permissions:
-    id-token: write
-    contents: read
-    pull-request: write
+permissions:
+  id-token: write
+  contents: read
+  pull-request: write
 
-  env:
-    ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-    ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-    ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-    ARM_USE_OIDC: true
+env:
+  ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+  ARM_USE_OIDC: true
 
-  jobs:
-    terraform-plan:
-      name: "Terraform Plan"
+jobs:
+  terraform-plan:
+    name: "Terraform Plan"
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./Infra
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: "Terraform Setup"
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_wrapper: false
+
+      - name: "Terraform Init"
+        id: init
+        run: terraform init
+
+      - name: "Terraform Plan"
+        run: terraform plan -out=tfplan
+
+      - name: "Terraform Plan Artifact"
+        uses: actions/upload-artifact@v3
+        with:
+          name: tfplan
+          path: ./Infra/tfplan
+
+    terraform-apply:
+      name: 'Terraform Apply'
       runs-on: ubuntu-latest
       defaults:
         run:
           working-directory: ./Infra
+      needs: [terraform-plan]
+
       steps:
-        - name: "Checkout"
-          uses: actions/checkout@v3
-          with:
-            fetch-depth: 0
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-        - name: "Terraform Setup"
-          uses: hashicorp/setup-terraform@v2
-          with:
-            terraform_wrapper: false
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
 
-        - name: "Terraform Init"
-          id: init
-          run: terraform init
+      - name: Terraform Init
+        run: terraform init
 
-        - name: "Terraform Plan"
-          run: terraform plan -out=tfplan
+      - name: Download Terraform Plan
+        uses: actions/download-artifact@v3
+        with:
+          name: tfplan
+          path: ./Infra
 
-        - name: "Terraform Plan Artifact"
-          uses: actions/upload-artifact@v3
-          with:
-            name: tfplan
-            path: ./Infra/tfplan
+      - name: Terraform Apply
+        run: terraform apply -auto-approve tfplan
 
-      terraform-apply:
-        name: 'Terraform Apply'
-        runs-on: ubuntu-latest
-        defaults:
-          run:
-            working-directory: ./Infra
-        needs: [terraform-plan]
-
-        steps:
-        - name: Checkout
-          uses: actions/checkout@v3
-          with:
-            fetch-depth: 0
-
-        - name: Setup Terraform
-          uses: hashicorp/setup-terraform@v2
-
-        - name: Terraform Init
-          run: terraform init
-
-        - name: Download Terraform Plan
-          uses: actions/download-artifact@v3
-          with:
-            name: tfplan
-            path: ./Infra
-
-        - name: Terraform Apply
-          run: terraform apply -auto-approve tfplan
-
-      
     
+  
