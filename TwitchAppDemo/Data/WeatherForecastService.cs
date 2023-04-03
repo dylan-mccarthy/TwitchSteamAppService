@@ -1,4 +1,4 @@
-namespace App.Data;
+namespace TwitchAppDemo.Data;
 
 public class WeatherForecastService
 {
