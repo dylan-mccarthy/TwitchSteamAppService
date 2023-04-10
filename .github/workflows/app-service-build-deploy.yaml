@@ -105,7 +105,7 @@ jobs:
           az acr build --image ${{ secrets.REGISTRY_LOGIN_SERVER}}/twitchappdemo:${{ github.run_number }} --registry ${{ secrets.REGISTRY_LOGIN_SERVER }} --file "Dockerfile" .
 
       - name: Build and push image
-        id: build-image
+        id: build-image-latest
         run: |
           az acr build --image ${{ secrets.REGISTRY_LOGIN_SERVER}}/twitchappdemo:latest --registry ${{ secrets.REGISTRY_LOGIN_SERVER }} --file "Dockerfile" .
 
