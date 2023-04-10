@@ -29,7 +29,10 @@ resource "azurerm_linux_web_app" "twitchapp" {
   resource_group_name = azurerm_resource_group.twitchapp.name
   location            = var.app_location
   service_plan_id     = azurerm_service_plan.twitchapp.id
-
+  identity {
+    type = "SystemAssigned"
+  }
+  
   site_config {
     application_stack {
       docker_image = "dmctwitchappacr/twitchappdemo"
