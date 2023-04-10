@@ -80,40 +80,40 @@ jobs:
     - name: Terraform Apply
       run: terraform apply -auto-approve tfplan
 
-  docker_image_build:
-    name: "Docker Image Build"
-    needs: [terraform-apply]
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./TwitchAppDemo
+  # docker_image_build:
+  #   name: "Docker Image Build"
+  #   needs: [terraform-apply]
+  #   runs-on: ubuntu-latest
+  #   defaults:
+  #     run:
+  #       working-directory: ./TwitchAppDemo
     
-    steps:
-      - name: 'Checkout'
-        uses: actions/checkout@v3
+  #   steps:
+  #     - name: 'Checkout'
+  #       uses: actions/checkout@v3
 
-      - name: 'Login Via Azure CLI'
-        uses: azure/login@v1
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  #     - name: 'Login Via Azure CLI'
+  #       uses: azure/login@v1
+  #       with:
+  #         client-id: ${{ secrets.AZURE_CLIENT_ID }}
+  #         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+  #         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Build and push image
-        id: build-image
-        run: |
-          az acr build --image ${{ secrets.REGISTRY_LOGIN_SERVER}}/twitchappdemo:${{ github.run_number }} --registry ${{ secrets.REGISTRY_LOGIN_SERVER }} --file "Dockerfile" .
+  #     - name: Build and push image
+  #       id: build-image
+  #       run: |
+  #         az acr build --image ${{ secrets.REGISTRY_LOGIN_SERVER}}/twitchappdemo:${{ github.run_number }} --registry ${{ secrets.REGISTRY_LOGIN_SERVER }} --file "Dockerfile" .
 
-      - name: Build and push image
-        id: build-image-latest
-        run: |
-          az acr build --image ${{ secrets.REGISTRY_LOGIN_SERVER}}/twitchappdemo:latest --registry ${{ secrets.REGISTRY_LOGIN_SERVER }} --file "Dockerfile" .
+  #     - name: Build and push image
+  #       id: build-image-latest
+  #       run: |
+  #         az acr build --image ${{ secrets.REGISTRY_LOGIN_SERVER}}/twitchappdemo:latest --registry ${{ secrets.REGISTRY_LOGIN_SERVER }} --file "Dockerfile" .
 
-      - name: 'Deploy to Azure App Service'
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: twitchapp01-app
-          images: ${{ secrets.REGISTRY_LOGIN_SERVER}}/twitchappdemo:latest
+  #     - name: 'Deploy to Azure App Service'
+  #       uses: azure/webapps-deploy@v2
+  #       with:
+  #         app-name: twitchapp01-app
+  #         images: ${{ secrets.REGISTRY_LOGIN_SERVER}}/twitchappdemo:latest
 
-      - name: Azure logout
-        run: az logout
+  #     - name: Azure logout
+  #       run: az logout
