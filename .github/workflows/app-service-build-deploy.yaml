@@ -80,4 +80,26 @@ jobs:
     - name: Terraform Apply
       run: terraform apply -auto-approve tfplan
 
-  
+  docker_image_build:
+    name: "Docker Image Build"
+    needs: [terraform-apply]
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./TwitchAppDemo
+    
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v3
+
+      - name: 'Login Via Azure CLI'
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Build and push image
+        id: build-image
+        run: |
+          az acr build --image ${{ secerts.REGISTRY_LOGIN_SERVER}}/twitchappdemo:${{ github.run_number }} --registry ${{ secrets.REGISTRY_LOGIN_SERVER }} --file "Dockerfile" .
