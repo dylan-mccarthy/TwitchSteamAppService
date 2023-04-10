@@ -1,7 +1,3 @@
-locals {
-  acr_url = "https://dmctwitchappacr.azurecr.io"
-}
-
 resource "azurerm_resource_group" "twitchapp" {
   name     = "twitchapp01"
   location = var.app_location
@@ -31,10 +27,15 @@ resource "azurerm_linux_web_app" "twitchapp" {
   service_plan_id     = azurerm_service_plan.twitchapp.id
 
   site_config {
+    container_registry_use_managed_identity = true
     application_stack {
-      docker_image = "dmctwitchappacr/twitchappdemo"
+      docker_image = "dmctwitchacr.azurecr.io/twitchappdemo"
       docker_image_tag = "latest"
     }
+  }
+
+  app_settings = {
+    "DOCKER_REGISTRY_SERVER_URL" = "https://dmctwitchacr.azurecr.io"
   }
 
   identity {
