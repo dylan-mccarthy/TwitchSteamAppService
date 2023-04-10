@@ -103,3 +103,12 @@ jobs:
         id: build-image
         run: |
           az acr build --image ${{ secrets.REGISTRY_LOGIN_SERVER}}/twitchappdemo:${{ github.run_number }} --registry ${{ secrets.REGISTRY_LOGIN_SERVER }} --file "Dockerfile" .
+
+      - name: 'Deploy to Azure App Service'
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: twitchappdemo
+          images: ${{ secrets.REGISTRY_LOGIN_SERVER}}/twitchappdemo:${{ github.run_number }}
+
+      - name: Azure logout
+        run: az logout
