@@ -107,7 +107,7 @@ jobs:
       - name: 'Deploy to Azure App Service'
         uses: azure/webapps-deploy@v2
         with:
-          app-name: twitchappdemo
+          app-name: twitchapp01-app
           images: ${{ secrets.REGISTRY_LOGIN_SERVER}}/twitchappdemo:${{ github.run_number }}
 
       - name: Azure logout
