@@ -37,10 +37,6 @@ resource "azurerm_linux_web_app" "twitchapp" {
     }
   }
 
-  app_settings = {
-    "DOCKER_REGISTRY_SERVER_URL" = "https://${var.ACR_NAME}.azurecr.io"
-  }
-  
   identity {
     type = "SystemAssigned"
   }
