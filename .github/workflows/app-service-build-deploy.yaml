@@ -47,6 +47,8 @@ jobs:
         run: terraform init
 
       - name: "Terraform Plan"
+        env:
+          TF_VAR_SQL_PASSWORD: ${{ secrets.SQL_PASSWORD }}
         run: terraform plan -out=tfplan
 
       - name: "Terraform Plan Artifact"

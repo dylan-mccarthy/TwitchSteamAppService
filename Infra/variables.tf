@@ -4,6 +4,10 @@ variable "app_location" {
 }
 
 variable "ACR_NAME" {
-  type = string
+  type    = string
   default = "DMCTwitchACR"
+}
+
+variable "SQL_PASSWORD" {
+  type = string
 }
