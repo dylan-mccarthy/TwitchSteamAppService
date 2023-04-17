@@ -1,5 +1,6 @@
 {
     "dataworkspace.excludedProjects": [
-        "TwitchAppDb/TwitchAppDb.sqlproj"
+        "TwitchAppDb/TwitchAppDb.sqlproj",
+        "DB/AzureSQLDB/AzureSQLDB.sqlproj"
     ]
 }
