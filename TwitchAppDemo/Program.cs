@@ -1,8 +1,15 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using TwitchAppDemo.Data;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+var connectionString = builder.Configuration.GetConnectionString("TwitchAppDbContextConnection") ?? throw new InvalidOperationException("Connection string 'TwitchAppDbContextConnection' not found.");
+
+builder.Services.AddDbContext<TwitchAppDbContext>(options => options.UseSqlServer(connectionString));
+
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<TwitchAppDbContext>();
 
 // Add services to the container.
 builder.Services.AddRazorPages();
