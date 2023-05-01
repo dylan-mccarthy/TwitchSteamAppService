@@ -12,7 +12,7 @@ using TwitchAppDemo.Data;
 namespace TwitchAppDemo.Migrations
 {
     [DbContext(typeof(TwitchAppDbContext))]
-    [Migration("20230417121240_InitialCreate")]
+    [Migration("20230501101419_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
