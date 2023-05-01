@@ -7,7 +7,3 @@ variable "ACR_NAME" {
   type    = string
   default = "DMCTwitchACR"
 }
-
-variable "SQL_PASSWORD" {
-  type = string
-}
