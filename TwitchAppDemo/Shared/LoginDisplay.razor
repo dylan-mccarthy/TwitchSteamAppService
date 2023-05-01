@@ -1,0 +1,26 @@
+@using Microsoft.AspNetCore.Identity
+@inject NavigationManager Navigation
+@inject TokenProvider TokenProvider
+@inject SignInManager<IdentityUser> SignInManager
+
+<AuthorizeView>
+    <Authorized>
+        <a href="Identity/Account/Manage/Index">
+            Hello, @context.User?.Identity?.Name!
+        </a>
+        <button @onclick="logout" class="nav-link btn btn-link text-dark">Logout</button>
+    
+        
+    </Authorized>
+    <NotAuthorized>
+        <a href="Identity/Account/Register">Register</a>
+        <a href="Identity/Account/Login">Login</a>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    private void logout()
+    {
+        Navigation.NavigateTo("/Identity/Account/Logout",true);
+    }
+}

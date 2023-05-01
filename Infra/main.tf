@@ -44,21 +44,4 @@ resource "azurerm_linux_web_app" "twitchapp" {
 
 }
 
-resource "azurerm_mssql_server" "twitchapp" {
-  name                         = "twitchapp01-sqlserver"
-  resource_group_name          = azurerm_resource_group.twitchapp.name
-  location                     = var.app_location
-  version                      = "12.0"
-  administrator_login          = "twitchapp01-sqladmin"
-  administrator_login_password = var.SQL_PASSWORD
-}
-
-resource "azurerm_mssql_database" "twitchapp" {
-  name                = "twitchapp01-sqldb"
-  server_id           = azurerm_mssql_server.twitchapp.id
-  collation           = "SQL_Latin1_General_CP1_CI_AS"
-  max_size_gb         = 2
-  sku_name            = "Basic"
-}
-
 

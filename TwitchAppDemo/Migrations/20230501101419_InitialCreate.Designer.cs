@@ -12,8 +12,8 @@ using TwitchAppDemo.Data;
 namespace TwitchAppDemo.Migrations
 {
     [DbContext(typeof(TwitchAppDbContext))]
-    [Migration("20230417105206_CreateIdentitySchema")]
-    partial class CreateIdentitySchema
+    [Migration("20230501101419_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
