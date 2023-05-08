@@ -8,7 +8,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  Plan_dev:
+  Plan_Dev:
     uses: dylan-mccarthy/TwitchSteamAppService/.github/workflows/tf-plan.yaml@main
     with:
       gh_environment: Dev
@@ -18,8 +18,14 @@ jobs:
       ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+  Apply_Dev:
+    needs: Plan_Dev
+    uses: dylan-mccarthy/TwitchSteamAppService/.github/workflows/tf-apply.yaml@main
+    with:
+      gh_environment: Dev
+      path: ./Infra/dev
   Plan_Test:
-    needs: [Plan_dev]
+    needs: [Plan_Dev,Apply_Dev]
     uses: dylan-mccarthy/TwitchSteamAppService/.github/workflows/tf-plan.yaml@main
     with:
       gh_environment: Test
@@ -29,8 +35,14 @@ jobs:
       ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+  Apply_Test:
+    needs: Plan_Test
+    uses: dylan-mccarthy/TwitchSteamAppService/.github/workflows/tf-apply.yaml@main
+    with:
+      gh_environment: Test
+      path: ./Infra/test
   Plan_Prod:
-    needs: [Plan_Test, Plan_dev]
+    needs: [Plan_Test, Apply_Test]
     uses: dylan-mccarthy/TwitchSteamAppService/.github/workflows/tf-plan.yaml@main
     with:
       gh_environment: Prod
@@ -40,3 +52,9 @@ jobs:
       ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+  Apply_Prod:
+    needs: Plan_Prod
+    uses: dylan-mccarthy/TwitchSteamAppService/.github/workflows/tf-apply.yaml@main
+    with:
+      gh_environment: Prod
+      path: ./Infra/prod

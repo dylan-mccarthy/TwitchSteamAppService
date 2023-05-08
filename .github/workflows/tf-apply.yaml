@@ -6,6 +6,10 @@ on:
         type: string
         description: 'GitHub environment'
         required: true
+      path:
+        type: string
+        description: 'Path to Terraform files'
+        required: true
     secrets:
       ARM_CLIENT_ID:
         description: 'Azure Service Principal Client ID'
@@ -23,9 +27,10 @@ jobs:
   terraform-apply:
     name: 'Terraform Apply'
     runs-on: ubuntu-latest
+    environment: ${{ inputs.gh_environment }}
     defaults:
       run:
-        working-directory: ./Infra
+        working-directory: ${{ inputs.path }}
 
     steps:
     - name: Checkout
@@ -43,7 +48,7 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: tfplan-${{ inputs.gh_environment }}
-        path: ./Infra
+        path: ${{ inputs.path }}
 
     - name: Terraform Apply
       run: terraform apply -auto-approve tfplan
