@@ -1,0 +1,67 @@
+name: 'TF Plan'
+on:
+  workflow_call:
+    inputs:
+      tf_var_file:
+        type: string
+        description: 'Terraform variable file'
+        required: true
+      gh_environment:
+        type: string
+        description: 'GitHub environment'
+        required: true
+    secrets:
+      ARM_CLIENT_ID:
+        description: 'Azure Service Principal Client ID'
+        required: true
+      ARM_SUBSCRIPTION_ID:
+        description: 'Azure Subscription ID'
+        required: true
+      ARM_TENANT_ID:
+        description: 'Azure Tenant ID'
+        required: true
+      ARM_USE_OIDC:
+        description: 'Azure Use OIDC'
+        required: true
+jobs:
+  terraform-plan:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.gh_environment }}
+    defaults:
+      run:
+        working-directory: ./Infra
+    env:
+      TF_VAR_FILE: ${{ inputs.tf_var_file }}
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+      ARM_USE_OIDC: true
+    steps:
+    - name: "Checkout"
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: "Terraform Setup"
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_wrapper: false
+
+    - name: "Terraform Init"
+      id: init
+      run: terraform init
+
+    - name: "Terraform Plan"
+      id: plan
+      run: terraform plan --var-file=$TF_VARS_FILE -out=tfplan
+      continue-on-error: true
+
+    - name: Terraform Plan Status
+      if: steps.plan.outputs.exitcode == 'failure'
+      run: exit 1
+
+    - name: "Terraform Plan Artifact"
+      uses: actions/upload-artifact@v3
+      with:
+        name: tfplan-${{ inputs.gh_environment }}
+        path: ./Infra/tfplan
