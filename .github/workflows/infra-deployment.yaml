@@ -12,7 +12,7 @@ jobs:
     uses: dylan-mccarthy/TwitchSteamAppService/.github/workflows/tf-plan.yaml@main
     with:
       gh_environment: Dev
-      tf_vars_file: ./Infra/dev/dev.tfvars
+      tf_vars_file: ./dev/dev.tfvars
     secrets:
       ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
@@ -22,7 +22,7 @@ jobs:
     uses: dylan-mccarthy/TwitchSteamAppService/.github/workflows/tf-plan.yaml@main
     with:
       gh_environment: Test
-      tf_vars_file: ./Infra/test/test.tfvars
+      tf_vars_file: ./test/test.tfvars
     secrets:
       ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
@@ -32,7 +32,7 @@ jobs:
     uses: dylan-mccarthy/TwitchSteamAppService/.github/workflows/tf-plan.yaml@main
     with:
       gh_environment: Dev
-      tf_vars_file: ./Infra/prod/prod.tfvars
+      tf_vars_file: ./prod/prod.tfvars
     secrets:
       ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
