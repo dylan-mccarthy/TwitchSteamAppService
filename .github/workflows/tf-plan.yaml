@@ -20,9 +20,6 @@ on:
       ARM_TENANT_ID:
         description: 'Azure Tenant ID'
         required: true
-      ARM_USE_OIDC:
-        description: 'Azure Use OIDC'
-        required: true
 jobs:
   terraform-plan:
     runs-on: ubuntu-latest
