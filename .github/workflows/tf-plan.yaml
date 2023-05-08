@@ -10,6 +10,10 @@ on:
         type: string
         description: 'GitHub environment'
         required: true
+      path:
+        type: string
+        description: 'Path to Terraform files'
+        required: true
     secrets:
       ARM_CLIENT_ID:
         description: 'Azure Service Principal Client ID'
@@ -27,7 +31,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: ./Infra
+        working-directory: ${{ inputs.path }}
     env:
       TF_VARS_FILE: ${{ inputs.tf_vars_file }}
       ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
@@ -57,4 +61,4 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: tfplan-${{ inputs.gh_environment }}
-        path: ./Infra/tfplan
+        path: ./tfplan
