@@ -1,6 +1,6 @@
 app_resource_group = "TwitchApp-DEV-RG"
 app_service_plan = "twitchapp-dev-serviceplan"
 app_service_linux_web_app = "twitchapp-dev-app"
-docker_image = "dmctwitchacr.azurecr.io/twitchappdemo"
+docker_image_name = "dmctwitchacr.azurecr.io/twitchappdemo"
 docker_image_tag = "dev"
-aspnetcore_envrionment = "Development"
+aspnetcore_environment = "Development"
