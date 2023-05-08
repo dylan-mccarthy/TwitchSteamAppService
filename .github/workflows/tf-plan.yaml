@@ -26,6 +26,7 @@ jobs:
     environment: ${{ inputs.gh_environment }}
     defaults:
       run:
+        shell: bash
         working-directory: ./Infra
     env:
       TF_VARS_FILE: ${{ inputs.tf_vars_file }}
@@ -51,11 +52,6 @@ jobs:
     - name: "Terraform Plan"
       id: plan
       run: terraform plan --var-file=$TF_VARS_FILE -out=tfplan
-      continue-on-error: true
-
-    - name: Terraform Plan Status
-      if: steps.plan.outputs.exitcode == 1
-      run: exit 1
 
     - name: "Terraform Plan Artifact"
       uses: actions/upload-artifact@v3
