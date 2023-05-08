@@ -1,0 +1,49 @@
+name: 'TF Apply'
+on:
+  workflow_call:
+    inputs:
+      gh_environment:
+        type: string
+        description: 'GitHub environment'
+        required: true
+    secrets:
+      ARM_CLIENT_ID:
+        description: 'Azure Service Principal Client ID'
+        required: true
+      ARM_SUBSCRIPTION_ID:
+        description: 'Azure Subscription ID'
+        required: true
+      ARM_TENANT_ID:
+        description: 'Azure Tenant ID'
+        required: true
+      ARM_USE_OIDC:
+        description: 'Azure Use OIDC'
+        required: true
+jobs:
+  terraform-apply:
+    name: 'Terraform Apply'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./Infra
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+
+    - name: Terraform Init
+      run: terraform init
+
+    - name: Download Terraform Plan
+      uses: actions/download-artifact@v3
+      with:
+        name: tfplan-${{ inputs.gh_environment }}
+        path: ./Infra
+
+    - name: Terraform Apply
+      run: terraform apply -auto-approve tfplan

@@ -1,0 +1,37 @@
+name: 'Infrastructure Deployment'
+on:
+  workflow_dispatch:
+    
+jobs:
+  Plan_dev:
+    uses: dylan-mccarthy/TwitchSteamAppService/.github/workflows/tf-apply.yaml@main
+    with:
+      gh_environment: Dev
+      tf_var_file: ./Infra/dev/dev.tfvars
+    secrets:
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      ARM_USE_OIDC: true
+  Plan_Test:
+    needs: [Plan_dev]
+    uses: dylan-mccarthy/TwitchSteamAppService/.github/workflows/tf-apply.yaml@main
+    with:
+      gh_environment: Test
+      tf_var_file: ./Infra/test/test.tfvars
+    secrets:
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      ARM_USE_OIDC: true
+  Plan_Prod:
+    needs: [Plan_Test, Plan_dev]
+    uses: dylan-mccarthy/TwitchSteamAppService/.github/workflows/tf-apply.yaml@main
+    with:
+      gh_environment: Dev
+      tf_var_file: ./Infra/prod/prod.tfvars
+    secrets:
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      ARM_USE_OIDC: true
