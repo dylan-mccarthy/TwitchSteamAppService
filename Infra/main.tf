@@ -12,6 +12,11 @@ resource "azurerm_container_registry" "shared" {
 
 }
 
+resource "azurerm_resource_group" "twitchapp" {
+  name     = var.app_resource_group
+  location = var.app_location
+}
+
 resource "azurerm_service_plan" "twitchapp" {
   name                = var.app_service_plan
   resource_group_name = azurerm_resource_group.twitchapp.name
