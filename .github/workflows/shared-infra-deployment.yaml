@@ -1,0 +1,31 @@
+name: 'Shared Infrastructure Deployment'
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
+jobs:
+  Plan_Shared:
+    uses: dylan-mccarthy/TwitchSteamAppService/.github/workflows/tf-plan.yaml@main
+    with:
+      gh_environment: Shared
+      tf_vars_file: shared.tfvars
+      path: ./Infra/shared
+    secrets:
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+
+  Apply_Shared:
+    needs: Plan_Shared
+    uses: dylan-mccarthy/TwitchSteamAppService/.github/workflows/tf-apply.yaml@main
+    with:
+      gh_environment: Shared
+      path: ./Infra/shared
+    secrets:
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
