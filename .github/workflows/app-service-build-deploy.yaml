@@ -57,7 +57,7 @@ jobs:
     needs: docker_image_build
     environment: Dev
     runs-on: ubuntu-latest
-
+    steps:
       - name: 'Deploy to Azure App Service'
         uses: azure/webapps-deploy@v2
         with:
@@ -72,7 +72,7 @@ jobs:
     needs: [ docker_image_build, deploy_to_dev ]
     environment: Test
     runs-on: ubuntu-latest
-
+    steps:
       - name: 'Deploy to Azure App Service'
         uses: azure/webapps-deploy@v2
         with:
@@ -87,7 +87,7 @@ jobs:
     needs: [ docker_image_build, deploy_to_dev, deploy_to_test ]
     environment: Prod
     runs-on: ubuntu-latest
-
+    steps:
       - name: 'Deploy to Azure App Service'
         uses: azure/webapps-deploy@v2
         with:
