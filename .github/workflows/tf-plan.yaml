@@ -14,10 +14,6 @@ on:
         type: string
         description: 'Path to Terraform files'
         required: true
-      env_vars:
-        type: object
-        description: 'Environment variables to set'
-        required: true
     secrets:
       ARM_CLIENT_ID:
         description: 'Azure Service Principal Client ID'
@@ -42,20 +38,11 @@ jobs:
       ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
       ARM_USE_OIDC: true
-      TF_ENVS: ${{ inputs.tf_envs }}
     steps:
     - name: "Checkout"
       uses: actions/checkout@v3
       with:
         fetch-depth: 0
-
-    - name: Set environment variables
-      run: |
-        # Loop over the environment variables
-        for key in "${!env_vars[@]}"; do
-          # Set the environment variable using the ::set-env command
-          echo "::set-env name=$key::${env_vars[$key]}"
-        done
     
     - name: "Terraform Setup"
       uses: hashicorp/setup-terraform@v2
