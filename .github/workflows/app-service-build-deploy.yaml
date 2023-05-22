@@ -5,6 +5,8 @@ on:
     branches:
       - main
       - releases/**
+    paths:
+      - 'TwitchAppDemo/**'
     paths-ignore:
       - 'README.md'
       - 'LICENSE'
@@ -25,7 +27,6 @@ env:
 jobs:
   docker_image_build:
     name: "Docker Image Build"
-    needs: [terraform-apply]
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -46,17 +47,52 @@ jobs:
         id: build-image
         run: |
           az acr build --image ${{ secrets.REGISTRY_LOGIN_SERVER}}/twitchappdemo:${{ github.run_number }} --registry ${{ secrets.REGISTRY_LOGIN_SERVER }} --file "Dockerfile" .
+          
+      - name: Set output parameter
+        id: image_name
+        run: echo "::set-output name=image::$REGISTRY_LOGIN_SERVER/twitchappdemo:${{ github.run_number }}"
 
-      - name: Build and push image
-        id: build-image-latest
-        run: |
-          az acr build --image ${{ secrets.REGISTRY_LOGIN_SERVER}}/twitchappdemo:latest --registry ${{ secrets.REGISTRY_LOGIN_SERVER }} --file "Dockerfile" .
+  deploy_to_dev:
+    name: "Deploy to Dev"
+    needs: docker_image_build
+    environment: Dev
+    runs-on: ubuntu-latest
 
       - name: 'Deploy to Azure App Service'
         uses: azure/webapps-deploy@v2
         with:
           app-name: twitchapp01-app
-          images: ${{ secrets.REGISTRY_LOGIN_SERVER}}/twitchappdemo:latest
+          images: ${{ needs.docker_image_build.outputs.image_name }}
+
+      - name: Azure logout
+        run: az logout
+    
+  deploy_to_test:
+    name: "Deploy to Test"
+    needs: [ docker_image_build, deploy_to_dev ]
+    environment: Test
+    runs-on: ubuntu-latest
+
+      - name: 'Deploy to Azure App Service'
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: twitchapp01-app
+          images: ${{ needs.docker_image_build.outputs.image_name }}
+
+      - name: Azure logout
+        run: az logout
+
+  deploy_to_prod:
+    name: "Deploy to Prod"
+    needs: [ docker_image_build, deploy_to_dev, deploy_to_test ]
+    environment: Prod
+    runs-on: ubuntu-latest
+
+      - name: 'Deploy to Azure App Service'
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: twitchapp01-app
+          images: ${{ needs.docker_image_build.outputs.image_name }}
 
       - name: Azure logout
         run: az logout
