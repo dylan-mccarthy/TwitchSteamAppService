@@ -14,6 +14,10 @@ on:
         type: string
         description: 'Path to Terraform files'
         required: true
+      tf_envs:
+        type: object
+        description: 'Terraform environment variables'
+        required: false
     secrets:
       ARM_CLIENT_ID:
         description: 'Azure Service Principal Client ID'
@@ -38,12 +42,19 @@ jobs:
       ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
       ARM_USE_OIDC: true
+      TF_ENVS: ${{ inputs.tf_envs }}
     steps:
     - name: "Checkout"
       uses: actions/checkout@v3
       with:
         fetch-depth: 0
 
+    - name: Loop over Json object
+      run: |
+        for key in "${!TF_ENVS[@]}"; do
+          echo "::set-env name=$key::${TF_ENVS[$key]}"
+        done
+    
     - name: "Terraform Setup"
       uses: hashicorp/setup-terraform@v2
       with:
