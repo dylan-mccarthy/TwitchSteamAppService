@@ -26,7 +26,7 @@ resource "azurerm_linux_web_app" "twitchapp" {
   }
 
   app_settings = {
-    "DOCKER_REGISTRY_SERVER_URL" = "https://dmctwitchacr.azurecr.io"
+    "DOCKER_REGISTRY_SERVER_URL" = "https://twitchappsacr.azurecr.io"
     "ASPNETCORE_ENVIRONMENT"     = var.aspnetcore_environment
   }
 
