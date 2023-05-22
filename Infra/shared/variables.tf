@@ -27,3 +27,11 @@ variable "sql_admin_password" {
 variable "sql_database_name" {
   description = "The name of the Azure SQL Database."
 }
+
+variable "log_analytics_workspace_name" {
+  description = "The name of the Log Analytics Workspace."
+}
+
+variable "app_insights_name" {
+  description = "The name of the Application Insights."
+}
