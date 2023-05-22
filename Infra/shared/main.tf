@@ -30,3 +30,19 @@ resource "azurerm_sql_database" "shared" {
   collation           = "SQL_Latin1_General_CP1_CI_AS"
   max_size_gb         = 1
 }
+
+resource "azurerm_log_analytics_workspace" "shared" {
+  name                = var.log_analytics_workspace_name
+  location            = var.app_location
+  resource_group_name = azurerm_resource_group.shared.name
+  sku                 = "PerGB2018"
+  retention_in_days   = 30
+}
+
+resource "azurerm_application_insights" "shared" {
+  name                = var.app_insights_name
+  location            = var.app_location
+  resource_group_name = azurerm_resource_group.shared.name
+  workspace_id        = azurerm_log_analytics_workspace.shared.id  
+  application_type    = "web"
+}
