@@ -14,9 +14,7 @@ jobs:
       gh_environment: Shared
       tf_vars_file: shared.tfvars
       path: ./Infra/shared
-      tf_envs: {
-        "TF_VAR_sql_admin_password": "${{ secrets.SQL_ADMIN_PASSWORD }}"
-      }
+      env_vars: '{"TF_VAR_sql_admin_password": "${{ secrets.SQL_ADMIN_PASSWORD }}"}'
     secrets:
       ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}

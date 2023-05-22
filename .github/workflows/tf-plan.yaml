@@ -14,10 +14,10 @@ on:
         type: string
         description: 'Path to Terraform files'
         required: true
-      tf_envs:
+      env_vars:
         type: object
-        description: 'Terraform environment variables'
-        required: false
+        description: 'Environment variables to set'
+        required: true
     secrets:
       ARM_CLIENT_ID:
         description: 'Azure Service Principal Client ID'
@@ -49,10 +49,12 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Loop over Json object
+    - name: Set environment variables
       run: |
-        for key in "${!TF_ENVS[@]}"; do
-          echo "::set-env name=$key::${TF_ENVS[$key]}"
+        # Loop over the environment variables
+        for key in "${!env_vars[@]}"; do
+          # Set the environment variable using the ::set-env command
+          echo "::set-env name=$key::${env_vars[$key]}"
         done
     
     - name: "Terraform Setup"
