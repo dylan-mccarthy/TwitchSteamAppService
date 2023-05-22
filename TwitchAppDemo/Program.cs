@@ -7,9 +7,16 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using TwitchAppDemo.Areas.Identity.Data;
+using Microsoft.Extensions.Logging.ApplicationInsights;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("TwitchAppDbContextConnection") ?? throw new InvalidOperationException("Connection string 'TwitchAppDbContextConnection' not found.");
+
+builder.Logging.AddApplicationInsights(
+    configureTelemetryConfiguration: (config) => 
+        config.ConnectionString = builder.Configuration.GetConnectionString("ApplicationInsightsConnectionString") ?? throw new InvalidOperationException("Connection string 'ApplicationInsightsConnectionString' not found."),
+        configureApplicationInsightsLoggerOptions: (options) => { } 
+);
 
 builder.Services.AddDbContext<TwitchAppDbContext>(options => options.UseSqlServer(connectionString));
 
