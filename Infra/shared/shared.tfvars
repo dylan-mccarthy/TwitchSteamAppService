@@ -1,3 +1,6 @@
 app_location = "AustraliaEast"
 shared_resource_group = "TwitchApp-SHARED-RG"
 ACR_NAME = "twitchappacr"
+sql_server_name = "twitchappsqlserver"
+sql_admin_username = "twitchappadmin"
+sql_database_name = "twitchappdb"
