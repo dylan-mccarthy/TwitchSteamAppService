@@ -18,6 +18,8 @@ builder.Logging.AddApplicationInsights(
         configureApplicationInsightsLoggerOptions: (options) => { } 
 );
 
+builder.Services.AddApplicationInsightsTelemetry();
+
 builder.Services.AddDbContext<TwitchAppDbContext>(options => options.UseSqlServer(connectionString));
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<TwitchAppDbContext>();
