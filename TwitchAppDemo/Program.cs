@@ -10,6 +10,7 @@ using TwitchAppDemo.Areas.Identity.Data;
 using Microsoft.Extensions.Logging.ApplicationInsights;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Configuration.AddEnvironmentVariables();
 var connectionString = builder.Configuration.GetConnectionString("TwitchAppDbContextConnection") ?? throw new InvalidOperationException("Connection string 'TwitchAppDbContextConnection' not found.");
 
 builder.Logging.AddApplicationInsights(
